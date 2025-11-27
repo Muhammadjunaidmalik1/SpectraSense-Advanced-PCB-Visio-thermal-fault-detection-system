@@ -23,7 +23,7 @@
 # # ==========================================
 # # 1. CONFIGURATION
 # # ==========================================
-# MODEL_PATH = "./checkpoints/best_new_dataset_200_epoch.pt"  
+# MODEL_PATH = "./checkpoints/best_epoch_200.pt"  
 # TEMP_UNIT = "C"
 # EMISSIVITY = 95
 # OVERLAY_OPACITY = 0.5   

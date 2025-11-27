@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 2
+names: ['Chip', 'soldering_iron']
+
+roboflow:
+  workspace: pcbthermalcameras
+  project: pcb_chip_detection-cje8p
+  version: 3
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/pcbthermalcameras/pcb_chip_detection-cje8p/dataset/3
