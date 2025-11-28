@@ -1,0 +1,7 @@
+# Ignore following files and directories
+__pycache__/
+.venv/
+.idea/
+.vscode/
+recordings/
+runs/
