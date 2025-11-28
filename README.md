@@ -1,5 +1,5 @@
 # SpectraSense-Advanced-PCB-Visio-thermal-fault-detection-system
-The repository for Advanced PCB Visio-thermal fault detection system developed at SICK hackathon.
+The repository for Advanced PCB Visio-thermal fault detection system developed at SICK hackathon 2025 at Makerspace Munich.
 
 ## Overview
 SpectraSense is an advanced PCB fault detection system that uses visual and thermal imaging to identify defects in soldering process and keep record of those defects.
@@ -9,10 +9,12 @@ SpectraSense is an advanced PCB fault detection system that uses visual and ther
 - Electronic parts detection
 - Solder quality determination using thermal camera
 - Integration with SICK sensor technology
+- Video stream is connected to a web app via FastAPI.
 
 ## Getting Started
 ### Prerequisites
 - Python 3.11.9
+- Node.js v24.11.1
 - Required dependencies (see `requirements.txt`)
 
 ### Installation
@@ -31,7 +33,7 @@ pip install -r requirements.txt
 python calibration.py
 ```
 
-2. **Update calibration matrix** - Use the transformation matrix from calibration in the this file to run both cameras simultaneously:
+2. **Update calibration matrix** - Use the transformation matrix obtained from calibration in the this file to run both cameras simultaneously:
 ```bash
 python run_calibrated_cams.py
 ```
@@ -55,6 +57,24 @@ python test.py
 ```bash
 python run.py
 ```
+
+## To run the Web App
+
+1. **Start the backend** - In one terminal, run:
+```bash
+python run_with_fastapi.py
+```
+
+2. **Start the frontend** - In another terminal:
+```bash
+cd frontend
+npm run dev
+```
+
+<div>
+	<img src="/assets/Front end with the soldering stream.png" width="33%" />
+	<p><em>Sample Scene</em></p>
+</div>
 
 
 ## License
