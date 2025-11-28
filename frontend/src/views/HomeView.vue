@@ -4,8 +4,9 @@ import LiveStream from '../components/LiveStream.vue';
 import StreamControls from '../components/StreamControls.vue';
 import ConnectionStatus from '../components/ConnectionStatus.vue';
 import SolderingTimer from '../components/SolderingTimer.vue';
+import { API_BASE_URL } from '../api/client';
 
-const defaultUrl = 'http://192.168.136.100/liveView';
+const defaultUrl = '';//http://192.168.136.100/liveView';
 
 /* camera view selection: 'rgb' | 'thermal' | 'combined' */
 const cameraView = ref('rgb');
@@ -20,6 +21,7 @@ const latencyMs = ref(80); // fake for now
 const temperatureC = ref(null);
 const statusMessages = ref([]);
 
+const combinedStreamUrl = computed(() => `${API_BASE_URL}/video-feed`);
 /* camera view labels */
 
 const cameraViewLabel = computed(() => {
@@ -120,10 +122,6 @@ function testThermalFrame() {
   pushStatusMessage('Requested thermal sensor frame from backend (test only).');
 }
 
-function testCombinedFrame() {
-  // later: call backend endpoint, e.g. GET /api/combined/frame
-  pushStatusMessage('Requested combined RGB + thermal frame (test only).');
-}
 
 /* Timer evaluation callback */
 
@@ -154,7 +152,7 @@ function handleTimerEvaluation(payload) {
             </span>
           </div>
           <div
-              v-if="cameraView === 'rgb'"
+              v-if="cameraView === 'rgbf'"
               class="text-muted"
               style="margin-top: 0.25rem;"
           >
@@ -247,27 +245,21 @@ function handleTimerEvaluation(payload) {
         </div>
       </template>
 
-      <!-- COMBINED VIEW (backend integration later) -->
+      <!-- COMBINED VIEW: live stream from backend -->
       <template v-else>
-        <div class="stream-container stream-placeholder">
-          <div class="placeholder-content">
-            <div class="placeholder-title">Combined RGB + Thermal View</div>
-            <div class="placeholder-text">
-              Fused RGB and thermal data (overlay, side-by-side, etc.) will be
-              provided by the backend and rendered here.
-            </div>
+        <div class="stream-container">
+          <div class="stream-inner">
+            <!-- For MJPEG-style streams a plain <img> is perfect -->
+            <img
+                :src="combinedStreamUrl"
+                alt="Combined RGB + thermal stream"
+                style="width: 100%; height: 100%; object-fit: contain; background: #000;"
+            />
           </div>
         </div>
 
-        <div class="btn-row" style="margin-top: 0.75rem;">
-          <button
-              type="button"
-              class="btn primary"
-              @click="testCombinedFrame"
-          >
-            <span class="btn-icon">🧪</span>
-            Test combined backend request
-          </button>
+        <div class="text-muted" style="margin-top: 0.5rem;">
+          Combined view from backend: <code>{{ combinedStreamUrl }}</code>
         </div>
       </template>
 

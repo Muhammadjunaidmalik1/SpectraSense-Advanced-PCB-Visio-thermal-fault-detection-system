@@ -15,6 +15,12 @@ from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
+
+# ==========================================
+# Script with FastAPI server to provide video stream and telemetry data - under development
+# ==========================================
+
+
 app = FastAPI()
 
 # Allow CORS so your frontend (React/Vue/HTML) can access data from any port

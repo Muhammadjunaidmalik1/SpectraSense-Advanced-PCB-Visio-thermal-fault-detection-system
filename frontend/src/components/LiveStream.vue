@@ -3,7 +3,8 @@ import { onMounted, watch, ref } from 'vue';
 
 const props = defineProps({
   src: { type: String, required: true },
-  mode: { type: String, default: 'iframe' }, // 'iframe' | 'video'
+  // 'iframe' | 'video' | 'frames'
+  mode: { type: String, default: 'iframe' },
   playing: { type: Boolean, default: true },
   reloadKey: { type: Number, default: 0 } // changes to force reload
 });
@@ -17,12 +18,13 @@ onMounted(() => {
 });
 
 watch(
-    () => [props.playing, props.reloadKey, props.src, props.mode],
-    () => {
-      if (props.mode === 'video') {
-        tryAutoPlay();
-      }
+  () => [props.playing, props.reloadKey, props.src, props.mode],
+  () => {
+    if (props.mode === 'video') {
+      tryAutoPlay();
     }
+    // for 'frames', the browser handles it automatically via <img> stream
+  }
 );
 
 function tryAutoPlay() {
@@ -47,27 +49,40 @@ function tryAutoPlay() {
     <div class="stream-inner">
       <!-- IFRAME MODE -->
       <iframe
-          v-if="mode === 'iframe'"
-          :key="`${mode}-${src}-${reloadKey}`"
-          :src="src"
-          allowfullscreen
-          referrerpolicy="no-referrer"
-          @error="emit('error', $event)"
+        v-if="mode === 'iframe'"
+        :key="`${mode}-${src}-${reloadKey}`"
+        :src="src"
+        allowfullscreen
+        referrerpolicy="no-referrer"
+        @error="emit('error', $event)"
       ></iframe>
 
       <!-- HTML5 VIDEO MODE (for direct camera streams like .mp4, .m3u8, etc.) -->
       <video
-          v-else
-          ref="videoRef"
-          :key="`${mode}-${src}-${reloadKey}`"
-          :src="src"
-          :muted="true"
-          playsinline
-          controls
-          @error="emit('error', $event)"
+        v-else-if="mode === 'video'"
+        ref="videoRef"
+        :src="src"
+        :muted="true"
+        playsinline
+        controls
+        @error="emit('error', $event)"
       >
         Your browser does not support the video tag.
       </video>
+
+      <!-- FRAMES MODE (cv2 / MJPEG style stream) -->
+      <img
+        v-else-if="mode === 'frames'"
+        :src="src"
+        alt="Frame-based stream"
+        style="width: 100%; height: 100%; object-fit: contain; background: #000;"
+        @error="emit('error', $event)"
+      />
+
+      <!-- Fallback (shouldn't normally hit) -->
+      <div v-else style="display:flex;align-items:center;justify-content:center;color:#fff;">
+        Unsupported mode: {{ mode }}
+      </div>
     </div>
   </div>
 </template>
